@@ -93,3 +93,15 @@
 (bake-pan 25)
 (cool-pan)
 (status)
+
+(defn scooped? [ingredient]
+  ((complement not-any?) #(= ingredient %) (list :sugar :flour :milk )))
+
+(defn squeezed? [ingredient] (= ingredient :egg))
+(defn simple? [ingredient] (= ingredient :butter))
+
+(defn add-scooped [ingredient] (if (scooped? ingredient) (add ingredient) (println "Sorry can't add that")))
+(defn add-squeezed [ingredient] (if (squeezed? ingredient) (add ingredient) (println "Sorry can't add that")))
+(defn add-simple [ingredient] (if (simple? ingredient) (add ingredient) (println "Sorry can't add that")))
+
+(add-squeezed :egg)
