@@ -71,7 +71,7 @@
 (status)
 
 (println "\nBaking a Cake - 3rd time\n")
-(defn add [ingredient]
+(defn add2 [ingredient]
   (cond 
     (= ingredient :egg) (add-egg)
     (= ingredient :sugar) (add-sugar)
@@ -81,12 +81,12 @@
     :else (do (println "Unknown ingredient:" ingredient) :error)))
 
 (start-over)
-(add :flour)
-(add :flour)
-(add :egg)
-(add :egg)
-(add :milk)
-(add :sugar)
+(add2 :flour)
+(add2 :flour)
+(add2 :egg)
+(add2 :egg)
+(add2 :milk)
+(add2 :sugar)
 (release)
 (mix)
 (pour-into-pan)
@@ -100,8 +100,27 @@
 (defn squeezed? [ingredient] (= ingredient :egg))
 (defn simple? [ingredient] (= ingredient :butter))
 
-(defn add-scooped [ingredient] (if (scooped? ingredient) (add ingredient) (println "Sorry can't add that")))
-(defn add-squeezed [ingredient] (if (squeezed? ingredient) (add ingredient) (println "Sorry can't add that")))
-(defn add-simple [ingredient] (if (simple? ingredient) (add ingredient) (println "Sorry can't add that")))
+(defn cannot-action [ingredient action] (println "Sorry, cannot" action ingredient))
 
-(add-squeezed :egg)
+(defn add-scooped [ingredient] (if (scooped? ingredient) 
+                                 (do (grab ingredient) (scoop ingredient) (add-to-bowl) (release)) 
+                                 (do (cannot-action ingredient "scoop") :error)))
+
+(defn add-sequeezed [ingredient] (if (squeezed? ingredient) 
+                                  (do (grab ingredient) (squeeze) (add-to-bowl)) 
+                                  (do (cannot-action ingredient "squeeze") :error)))
+
+(defn add-simple [ingredient] (if (simple? ingredient) 
+                                (do (grab ingredient) (add-to-bowl)) 
+                                (cannot-action ingredient "add")))
+
+(defn add [ingredient]
+  (cond
+    (scooped? ingredient) (add-scooped ingredient)
+    (squeezed? ingredient) (add-sequeezed ingredient)
+    (simple? ingredient) (add-simple ingredient)
+    :else
+    (do (println "I do not have" ingredient) :error))
+  )
+
+(status)
