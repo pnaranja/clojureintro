@@ -1,30 +1,5 @@
-(ns clojureintro.core)
-
-(load-file "src/clojureintro/video1.clj")
-
-(println "\nBaking a Cake\n")
-(defn add2 [ingredient]
-  (cond 
-    (= ingredient :egg) (add-egg)
-    (= ingredient :sugar) (add-sugar)
-    (= ingredient :flour) (add-flour)
-    (= ingredient :milk) (add-milk)
-    (= ingredient :butter) (add-butter)
-    :else (do (println "Unknown ingredient:" ingredient) :error)))
-
-(start-over)
-(add2 :flour)
-(add2 :flour)
-(add2 :egg)
-(add2 :egg)
-(add2 :milk)
-(add2 :sugar)
-(release)
-(mix)
-(pour-into-pan)
-(bake-pan 25)
-(cool-pan)
-(status)
+(ns clojureintro.core
+  (:use bakery.core))
 
 (defn scooped? [ingredient]
   ((complement not-any?) #(= ingredient %) (list :sugar :flour :milk )))
@@ -80,3 +55,8 @@
   (pour-into-pan)
   (bake-pan 30)
   (cool-pan))
+
+(defn -main [] (println "hello")
+  (bake-cake)
+  (bake-cookies)
+  )
