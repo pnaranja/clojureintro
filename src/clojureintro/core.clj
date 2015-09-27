@@ -1,6 +1,28 @@
 (ns clojureintro.core
   (:use bakery.core))
 
+(defn loadup 
+  ([n ingredient] (do (dotimes [i n] ( load-up ingredient)) :ok))
+  ([ingredient] (loadup 1 ingredient)))
+
+(defn unload-multiple 
+  ([n ingredient] (do (dotimes [i n] (unload ingredient)) :ok))
+  ([ingredient] (unload-multiple 1 ingredient)))
+
+(defn setup []
+  (start-over)
+  (go-to :fridge)
+  (loadup 5 :egg)
+  (loadup 5 :butter)
+  (go-to :pantry)
+  (loadup 5 :flour)
+  (loadup 5 :sugar)
+  (go-to :prep-area)
+  (unload-multiple 5 :egg)
+  (unload-multiple 5 :butter)
+  (unload-multiple 5 :flour)
+  (unload-multiple 5 :sugar))
+
 (defn scooped? [ingredient]
   ((complement not-any?) #(= ingredient %) (list :sugar :flour :milk )))
 
