@@ -1,6 +1,8 @@
 (ns clojureintro.core
   (:use bakery.core))
 
+(defn error [& args] (apply println args) :error)
+
 (defn loadup 
   ([n ingredient] (do (dotimes [i n] ( load-up ingredient)) :ok))
   ([ingredient] (loadup 1 ingredient)))
@@ -51,7 +53,7 @@
     (squeezed? ingredient) (add-sequeezed ingredient)
     (simple? ingredient) (add-simple ingredient)
     :else
-    (do (println "I do not have" ingredient) :error))
+    (error "I do not have" ingredient ))
   )
 
 (defn add  
@@ -82,5 +84,10 @@
 
 (defn -main [] (println "hello")
   (bake-cake)
-  (bake-cookies)
-  )
+  (bake-cookies))
+
+(defn myprintln [& args] 
+  (loop [args args] 
+    (if (empty? args) (println) 
+      (do (print (first args) " ") (recur (rest args))))))
+
