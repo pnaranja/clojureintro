@@ -9,11 +9,12 @@
   ([n ingredient] (do (dotimes [i n] (unload ingredient)) :ok))
   ([ingredient] (unload-multiple 1 ingredient)))
 
-(defn setup []
+(defn get-ingredients []
   (start-over)
   (go-to :fridge)
   (loadup 5 :egg)
   (loadup 5 :butter)
+  (loadup 5 :milk)
   (go-to :pantry)
   (loadup 5 :flour)
   (loadup 5 :sugar)
@@ -21,6 +22,7 @@
   (unload-multiple 5 :egg)
   (unload-multiple 5 :butter)
   (unload-multiple 5 :flour)
+  (unload-multiple 5 :milk)
   (unload-multiple 5 :sugar))
 
 (defn scooped? [ingredient]
@@ -57,7 +59,7 @@
   ([n ingredient] (do (dotimes [i n] (add-ingredient ingredient)) :ok)))
 
 (defn bake-cake []
-  (start-over)
+  (get-ingredients)
   (add 2 :flour)
   (add 2 :egg)
   (add :milk)
@@ -68,7 +70,7 @@
   (cool-pan))
 
 (defn bake-cookies []
-  (start-over)
+  (get-ingredients)
   (add :egg)
   (add :flour)
   (add :sugar)
