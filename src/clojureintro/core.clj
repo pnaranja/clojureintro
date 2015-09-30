@@ -27,11 +27,13 @@
   (unload-multiple 5 :milk)
   (unload-multiple 5 :sugar))
 
-(defn scooped? [ingredient]
-  ((complement not-any?) #(= ingredient %) (list :sugar :flour :milk )))
+(def scooped-ingredients #{:sugar :flour :milk})
+(def squeezed-ingredients #{:egg})
+(def simple-ingredients #{:butter})
 
-(defn squeezed? [ingredient] (= ingredient :egg))
-(defn simple? [ingredient] (= ingredient :butter))
+(defn scooped? [ingredient] (contains? scooped-ingredients ingredient))  
+(defn squeezed? [ingredient] (contains? squeezed-ingredients ingredient))  
+(defn simple? [ingredient] (contains? simple-ingredients ingredient))  
 
 (defn cannot-action [ingredient action] (println "Sorry, cannot" action ingredient))
 
@@ -82,6 +84,8 @@
   (bake-pan 30)
   (cool-pan))
 
+;------------Part 2 Code-----------
+;----------------------------------
 (defn -main [] (println "hello")
   (bake-cake)
   (bake-cookies))
@@ -91,3 +95,11 @@
     (if (empty? args) (println) 
       (do (print (first args) " ") (recur (rest args))))))
 
+(def pantry-ingredients #{:sugar :flour})
+(def fridge-ingredients #{:milk :egg :butter})
+
+(defn from-pantry? [ingredient]
+  (contains?  pantry-ingredients ingredient))
+
+(defn from-fridge? [ingredient]
+  (contains?  fridge-ingredients ingredient))
