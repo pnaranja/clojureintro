@@ -103,3 +103,12 @@
 
 (defn from-fridge? [ingredient]
   (contains?  fridge-ingredients ingredient))
+
+(defn fetch-from-pantry ([ingredient] (fetch-from-pantry 1 ingredient))
+  ([amount ingredient] 
+    (if (from-pantry? ingredient) 
+      (do 
+        (go-to :pantry) 
+        (loadup amount ingredient)
+        (go-to :prep-area)
+        (unload-multiple amount ingredient)))))
