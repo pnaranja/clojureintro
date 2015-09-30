@@ -11,7 +11,7 @@
   ([n ingredient] (do (dotimes [i n] (unload ingredient)) :ok))
   ([ingredient] (unload-multiple 1 ingredient)))
 
-(defn get-ingredients []
+(defn get-5-each-ingredients []
   (start-over)
   (go-to :fridge)
   (loadup 5 :egg)
@@ -63,7 +63,7 @@
   ([n ingredient] (do (dotimes [i n] (add-ingredient ingredient)) :ok)))
 
 (defn bake-cake []
-  (get-ingredients)
+  (get-5-each-ingredients)
   (add 2 :flour)
   (add 2 :egg)
   (add :milk)
@@ -74,7 +74,7 @@
   (cool-pan))
 
 (defn bake-cookies []
-  (get-ingredients)
+  (get-5-each-ingredients)
   (add :egg)
   (add :flour)
   (add :sugar)
@@ -104,11 +104,17 @@
 (defn from-fridge? [ingredient]
   (contains?  fridge-ingredients ingredient))
 
-(defn fetch-from-pantry ([ingredient] (fetch-from-pantry 1 ingredient))
+(defn fetch ([ingredient] (fetch 1 ingredient))
   ([amount ingredient] 
-    (if (from-pantry? ingredient) 
+    (cond (from-pantry? ingredient) 
       (do 
         (go-to :pantry) 
         (loadup amount ingredient)
         (go-to :prep-area)
-        (unload-multiple amount ingredient)))))
+        (unload-multiple amount ingredient)))
+    (cond (from-fridge? ingredient)
+        (do
+          (go-to :fridge)
+          (loadup amount ingredient)
+          (go-to :prep-area)
+          (unload-multiple amount ingredient)))))
