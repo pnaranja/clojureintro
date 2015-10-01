@@ -106,15 +106,18 @@
 
 (defn fetch ([ingredient] (fetch 1 ingredient))
   ([amount ingredient] 
-    (cond (from-pantry? ingredient) 
-      (do 
-        (go-to :pantry) 
-        (loadup amount ingredient)
-        (go-to :prep-area)
-        (unload-multiple amount ingredient)))
-    (cond (from-fridge? ingredient)
-        (do
-          (go-to :fridge)
-          (loadup amount ingredient)
-          (go-to :prep-area)
-          (unload-multiple amount ingredient)))))
+   (cond 
+     (from-pantry? ingredient) 
+     (do 
+       (go-to :pantry) 
+       (loadup amount ingredient)
+       (go-to :prep-area)
+       (unload-multiple amount ingredient))
+     (from-fridge? ingredient) 
+     (do
+       (go-to :fridge)
+       (loadup amount ingredient)
+       (go-to :prep-area)
+       (unload-multiple amount ingredient))
+     :else
+     (error "Ingredient not in the pantry or fridge"))))
