@@ -8,7 +8,7 @@
   ([ingredient] (loadup 1 ingredient)))
 
 (defn unload-multiple 
-  ([n ingredient] (do (dotimes [i n] (unload ingredient)) :ok))
+  ([n ingredient] (do (when (and (not= n nil) (> n 0)) (dotimes [i n] (unload ingredient))) :ok))
   ([ingredient] (unload-multiple 1 ingredient)))
 
 (defn get-5-each-ingredients []
@@ -121,3 +121,26 @@
        (unload-multiple amount ingredient))
      :else
      (error "Ingredient not in the pantry or fridge"))))
+
+(defn fetch-from-list 
+  "Fetch ingredients from a shopping-list.  The shopping-list should be a map"
+  [shopping-list]
+  (when (or  (contains? shopping-list :sugar) (contains? shopping-list :flour)) 
+    (do 
+      (go-to :pantry)
+      (loadup (get shopping-list :sugar) :sugar)
+      (loadup (get shopping-list :flour) :flour)))
+  (when (or  (contains? shopping-list :milk) (contains? shopping-list :egg) (contains? shopping-list :butter)) 
+    (do 
+      (go-to :fridge)
+      (loadup (get shopping-list :milk) :milk)
+      (loadup (get shopping-list :egg) :egg)
+      (loadup (get shopping-list :butter) :butter)))  
+  
+  (go-to :prep-area)
+  (unload-multiple (get shopping-list :sugar) :sugar)
+  (unload-multiple (get shopping-list :flour) :flour)
+  (unload-multiple (get shopping-list :milk) :milk)
+  (unload-multiple (get shopping-list :egg) :egg)
+  (unload-multiple (get shopping-list :butter) :butter)
+  )
