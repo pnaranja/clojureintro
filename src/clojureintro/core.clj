@@ -4,7 +4,7 @@
 (defn error [& args] (apply println args) :error)
 
 (defn loadup 
-  ([n ingredient] (do (dotimes [i n] ( load-up ingredient)) :ok))
+  ([n ingredient] ( if (not (nil? n)) (do (dotimes [i n] ( load-up ingredient)) :ok)))
   ([ingredient] (loadup 1 ingredient)))
 
 (defn unload-multiple 
