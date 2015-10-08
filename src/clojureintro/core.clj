@@ -123,21 +123,15 @@
      (error "Ingredient not in the pantry or fridge"))))
 
 (defn fetch-from-list 
-  "Fetch ingredients from a shopping-list.  The shopping-list should be a map"
+  "Fetch ingredients from a shopping-list.  The shopping-list should be a map.
+  Shopping-list example: {:egg 2, :flour 3, :butter 4}"
   [shopping-list]
   (go-to :pantry)
-  (loadup (:sugar shopping-list 0) :sugar)
-  (loadup (:flour shopping-list 0) :flour)
+  (doseq [ingredient pantry-ingredients] (loadup (ingredient shopping-list 0) ingredient))
   
   (go-to :fridge)
-  (loadup (:milk shopping-list 0) :milk)
-  (loadup (:egg shopping-list 0) :egg)
-  (loadup (:egg shopping-list 0) :butter)  
+  (doseq [ingredient fridge-ingredients] (loadup (ingredient shopping-list 0) ingredient))
   
   (go-to :prep-area)
-  (unload-multiple (:sugar shopping-list ) :sugar)
-  (unload-multiple (:flour shopping-list ) :flour)
-  (unload-multiple (:milk shopping-list ) :milk)
-  (unload-multiple (:egg shopping-list ) :egg)
-  (unload-multiple (:butter shopping-list ) :butter)
-  )
+  (doseq [ingredient (apply conj pantry-ingredients fridge-ingredients) ] (unload-multiple (ingredient shopping-list 0) ingredient))
+  )  
