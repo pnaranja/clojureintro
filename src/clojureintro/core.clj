@@ -125,22 +125,19 @@
 (defn fetch-from-list 
   "Fetch ingredients from a shopping-list.  The shopping-list should be a map"
   [shopping-list]
-  (when (or  (contains? shopping-list :sugar) (contains? shopping-list :flour)) 
-    (do 
-      (go-to :pantry)
-      (loadup (get shopping-list :sugar) :sugar)
-      (loadup (get shopping-list :flour) :flour)))
-  (when (or  (contains? shopping-list :milk) (contains? shopping-list :egg) (contains? shopping-list :butter)) 
-    (do 
-      (go-to :fridge)
-      (loadup (get shopping-list :milk) :milk)
-      (loadup (get shopping-list :egg) :egg)
-      (loadup (get shopping-list :butter) :butter)))  
+  (go-to :pantry)
+  (loadup (:sugar shopping-list 0) :sugar)
+  (loadup (:flour shopping-list 0) :flour)
+  
+  (go-to :fridge)
+  (loadup (:milk shopping-list 0) :milk)
+  (loadup (:egg shopping-list 0) :egg)
+  (loadup (:egg shopping-list 0) :butter)  
   
   (go-to :prep-area)
-  (unload-multiple (get shopping-list :sugar) :sugar)
-  (unload-multiple (get shopping-list :flour) :flour)
-  (unload-multiple (get shopping-list :milk) :milk)
-  (unload-multiple (get shopping-list :egg) :egg)
-  (unload-multiple (get shopping-list :butter) :butter)
+  (unload-multiple (:sugar shopping-list ) :sugar)
+  (unload-multiple (:flour shopping-list ) :flour)
+  (unload-multiple (:milk shopping-list ) :milk)
+  (unload-multiple (:egg shopping-list ) :egg)
+  (unload-multiple (:butter shopping-list ) :butter)
   )
