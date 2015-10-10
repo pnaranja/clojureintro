@@ -97,6 +97,8 @@
 
 (def pantry-ingredients #{:sugar :flour})
 (def fridge-ingredients #{:milk :egg :butter})
+(def locations #(:pantry :fridge))
+(def all-ingredients #(pantry-ingredients fridge-ingredients))
 
 (defn from-pantry? [ingredient]
   (contains?  pantry-ingredients ingredient))
@@ -126,6 +128,7 @@
   "Fetch ingredients from a shopping-list.  The shopping-list should be a map.
   Shopping-list example: {:egg 2, :flour 3, :butter 4}"
   [shopping-list]
+  (doseq [location locations ingredient ] (do (go-to location) (loadup (ingredient shopping-list 0) ingredient )))
   (go-to :pantry)
   (doseq [ingredient pantry-ingredients] (loadup (ingredient shopping-list 0) ingredient))
   
