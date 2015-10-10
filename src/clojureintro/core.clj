@@ -84,7 +84,7 @@
   (bake-pan 30)
   (cool-pan))
 
-;------------Part 2 Code-----------
+;------------Part 1 Code-----------
 ;----------------------------------
 (defn -main [] (println "hello")
   (bake-cake)
@@ -97,8 +97,8 @@
 
 (def pantry-ingredients #{:sugar :flour})
 (def fridge-ingredients #{:milk :egg :butter})
-(def locations #(:pantry :fridge))
-(def all-ingredients #(pantry-ingredients fridge-ingredients))
+(def locations #{:pantry :fridge})
+(def all-ingredients (apply conj pantry-ingredients fridge-ingredients))
 
 (defn from-pantry? [ingredient]
   (contains?  pantry-ingredients ingredient))
@@ -128,13 +128,9 @@
   "Fetch ingredients from a shopping-list.  The shopping-list should be a map.
   Shopping-list example: {:egg 2, :flour 3, :butter 4}"
   [shopping-list]
-  (doseq [location locations ingredient ] (do (go-to location) (loadup (ingredient shopping-list 0) ingredient )))
-  (go-to :pantry)
-  (doseq [ingredient pantry-ingredients] (loadup (ingredient shopping-list 0) ingredient))
-  
-  (go-to :fridge)
-  (doseq [ingredient fridge-ingredients] (loadup (ingredient shopping-list 0) ingredient))
-  
+  (doseq [[location ingredients] {:pantry pantry-ingredients, :fridge fridge-ingredients}] 
+     (go-to location) 
+     (doseq [ingredient ingredients] (loadup (ingredient shopping-list 0) ingredient)))
+
   (go-to :prep-area)
-  (doseq [ingredient (apply conj pantry-ingredients fridge-ingredients) ] (unload-multiple (ingredient shopping-list 0) ingredient))
-  )  
+  (doseq [ingredient all-ingredients ] (unload-multiple (ingredient shopping-list 0) ingredient)))  
