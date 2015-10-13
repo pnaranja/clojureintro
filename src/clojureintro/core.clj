@@ -133,4 +133,4 @@
      (doseq [ingredient ingredients] (loadup (ingredient shopping-list 0) ingredient)))
 
   (go-to :prep-area)
-  (doseq [ingredient all-ingredients ] (unload-multiple (ingredient shopping-list 0) ingredient)))  
+  (doseq [[ingredient amount] shopping-list] (unload-multiple amount ingredient)))  
