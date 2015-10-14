@@ -62,7 +62,7 @@
   ([ingredient] (add 1 ingredient))
   ([n ingredient] (do (dotimes [i n] (add-ingredient ingredient)) :ok)))
 
-(defn bake-cake []
+(defn bake-cake-old []
   (get-5-each-ingredients)
   (add 2 :flour)
   (add 2 :egg)
@@ -73,7 +73,7 @@
   (bake-pan 25)
   (cool-pan))
 
-(defn bake-cookies []
+(defn bake-cookies-old []
   (get-5-each-ingredients)
   (add :egg)
   (add :flour)
@@ -86,10 +86,6 @@
 
 ;------------Part 1 Code-----------
 ;----------------------------------
-(defn -main [] (println "hello")
-  (bake-cake)
-  (bake-cookies))
-
 (defn myprintln [& args] 
   (loop [args args] 
     (if (empty? args) (println) 
@@ -134,3 +130,47 @@
 
   (go-to :prep-area)
   (doseq [[ingredient amount] shopping-list] (unload-multiple amount ingredient)))  
+
+(def cake-ingredients {:flour 2, :egg 2, :milk 1, :sugar 1})
+(def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
+
+(defn bake-cake []
+  (fetch-from-list cake-ingredients)
+  (add 2 :flour)
+  (add 2 :egg)
+  (add :milk)
+  (add :sugar)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 25)
+  (cool-pan))
+
+(defn bake-cookies []
+  (fetch-from-list cookie-ingredients)
+  (add :egg)
+  (add :flour)
+  (add :sugar)
+  (add :butter)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 30)
+  (cool-pan))
+
+(defn day-at-bakery []
+  (doseq [order (get-morning-orders)] 
+    (dotimes [n (:cake (order :items) 0)] 
+      (delivery {:orderid (order :orderid)
+                 :address (order :address)
+                 :rackids [(bake-cake)]
+                 }))
+    (dotimes [n (:cookies (order :items) 0)] 
+      (delivery {:orderid (order :orderid)
+                 :address (order :address)
+                 :rackids [(bake-cookies)]
+                 }))
+    
+    ))
+
+(defn -main [] (println "hello")
+  (day-at-bakery))
+
