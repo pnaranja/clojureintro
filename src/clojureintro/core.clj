@@ -134,6 +134,9 @@
 (def cake-ingredients {:flour 2, :egg 2, :milk 1, :sugar 1})
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
 
+;Just an example to use later
+(def cake-cookie-ingredients (merge-with + cake-ingredients cookie-ingredients))
+
 (defn bake-cake []
   (fetch-from-list cake-ingredients)
   (add 2 :flour)
@@ -157,20 +160,13 @@
   (cool-pan))
 
 (defn day-at-bakery []
-  (doseq [order (get-morning-orders)] 
-    (dotimes [n (:cake (order :items) 0)] 
+  (doseq [order (get-morning-orders), [item bake-item] {:cake bake-cake, :cookies bake-cookies}] 
+    (dotimes [n (item (order :items) 0)] 
       (delivery {:orderid (order :orderid)
                  :address (order :address)
-                 :rackids [(bake-cake)]
-                 }))
-    (dotimes [n (:cookies (order :items) 0)] 
-      (delivery {:orderid (order :orderid)
-                 :address (order :address)
-                 :rackids [(bake-cookies)]
-                 }))
-    
-    ))
+                 :rackids [(bake-item)]
+                 }))))
 
 (defn -main [] (println "hello")
   (day-at-bakery))
-
+(get-morning-orders)
