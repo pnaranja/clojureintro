@@ -137,6 +137,10 @@
 ;Just an example to use later
 (def cake-cookie-ingredients (merge-with + cake-ingredients cookie-ingredients))
 
+(defn add-ingredients 
+  "Merges two seperate ingredient lists (maps)"
+  [ingredients1 ingredients2] (merge-with + ingredients1 ingredients2))
+
 (defn bake-cake []
   (fetch-from-list cake-ingredients)
   (add 2 :flour)
