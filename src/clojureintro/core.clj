@@ -134,12 +134,13 @@
 (def cake-ingredients {:flour 2, :egg 2, :milk 1, :sugar 1})
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
 
-(defn add-ingredients 
+(defn merge-lists 
   "Merges two seperate ingredient lists (maps)"
   [ingredients1 ingredients2] (merge-with + ingredients1 ingredients2))
 
-(defn bake-cake []
-  (fetch-from-list cake-ingredients)
+(defn bake-cake 
+  "Assume cake-ingredients are already fetched"
+  []
   (add 2 :flour)
   (add 2 :egg)
   (add :milk)
@@ -149,8 +150,9 @@
   (bake-pan 25)
   (cool-pan))
 
-(defn bake-cookies []
-  (fetch-from-list cookie-ingredients)
+(defn bake-cookies 
+  "Assume cookies-ingredients are already fetched"
+  []
   (add :egg)
   (add :flour)
   (add :sugar)
@@ -160,8 +162,15 @@
   (bake-pan 30)
   (cool-pan))
 
-(defn get-all-ingredients-for-orders [orders]
-  (reduce add-ingredients (map #(:items %) orders)))
+(defn food-for-orders [orders]
+  (reduce merge-lists (map #(:items %) orders)))
+
+(defn ingredients-for-orders [orders]
+  (let [ total-food (food-for-orders (get-morning-orders))
+         ingredients {:cake cake-ingredients, :cookies cookie-ingredients}]
+     
+    ) 
+  )
 
 (defn day-at-bakery []
   (doseq [order (get-morning-orders), [item bake-item] {:cake bake-cake, :cookies bake-cookies}] 
