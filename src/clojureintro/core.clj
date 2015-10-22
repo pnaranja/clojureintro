@@ -134,10 +134,6 @@
 (def cake-ingredients {:flour 2, :egg 2, :milk 1, :sugar 1})
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
 
-(defn merge-lists 
-  "Merges two seperate ingredient lists (maps)"
-  [ingredients1 ingredients2] (merge-with + ingredients1 ingredients2))
-
 (defn bake-cake 
   "Assume cake-ingredients are already fetched"
   []
@@ -162,23 +158,43 @@
   (bake-pan 30)
   (cool-pan))
 
-(defn food-for-orders [orders]
+(defn merge-lists 
+  "Merges two seperate ingredient lists (maps)"
+  [ingredients1 ingredients2] (merge-with + ingredients1 ingredients2))
+
+(defn food-for-orders 
+  "Return the total food for all the orders"
+  [orders]
   (reduce merge-lists (map #(:items %) orders)))
 
-(defn ingredients-for-orders [orders]
-  (let [ total-food (food-for-orders (get-morning-orders))
+(defn multiply-ingredients 
+  "Multiply the amount of ingredients by n"
+  [n ingredients]
+  (into {} (for [ [k v] ingredients] [k (* n v)])))
+
+(defn ingredients-for-orders 
+  "Returns the total ingredients needed for all the orders"
+  [orders]
+  (let [ total-food (food-for-orders orders)
          ingredients {:cake cake-ingredients, :cookies cookie-ingredients}]
-    (into {}  (for [ [k v]  (:cake ingredients)] [k (* 2 v)]))       
-    )
-  )
+    (reduce merge-lists (for [[k v] total-food] (multiply-ingredients v (k ingredients))))))
 
 (defn day-at-bakery []
-  (doseq [order (get-morning-orders), [item bake-item] {:cake bake-cake, :cookies bake-cookies}] 
+  (doseq [order (get-morning-orders), [item [bake-item ingredients]] {:cake [ bake-cake cake-ingredients], :cookies [bake-cookies cookie-ingredients]}] 
     (dotimes [n (item (order :items) 0)] 
+      (fetch-from-list ingredients)
       (delivery {:orderid (order :orderid)
                  :address (order :address)
-                 :rackids [(bake-item)]
-                 }))))
+                 :rackids [(bake-item)]}))))
+
+(defn day-at-bakery2 []
+  (let [orders (get-morning-orders), all-ingredients (ingredients-for-orders orders)]
+    (fetch-from-list all-ingredients)
+    (doseq [order orders, [item bake-item] {:cake bake-cake, :cookies bake-cookies}]
+      (dotimes [n (item (order :items) 0)]
+        (delivery {:orderid (order :orderid)
+                   :address (order :address)
+                   :rackids [(bake-item)]})))))
 
 (defn -main [] (println "hello")
   (day-at-bakery))
