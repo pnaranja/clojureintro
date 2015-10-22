@@ -168,8 +168,8 @@
 (defn ingredients-for-orders [orders]
   (let [ total-food (food-for-orders (get-morning-orders))
          ingredients {:cake cake-ingredients, :cookies cookie-ingredients}]
-     
-    ) 
+    (into {}  (for [ [k v]  (:cake ingredients)] [k (* 2 v)]))       
+    )
   )
 
 (defn day-at-bakery []
