@@ -203,17 +203,15 @@
 (defn day-at-bakery3
   "Fetching all ingredients for all orders first.  Then baking all items per order and delivering that order of items"
   []
-  ( let [orders (get-morning-orders), all-ingredients (ingredients-for-orders orders),
-         bake-items {:cake bake-cake, :cookies bake-cookies}, all-bake-items []]
+  (let [orders (get-morning-orders),  all-ingredients (ingredients-for-orders orders)]
     (fetch-from-list all-ingredients)
     (doseq [order orders]
-      (for [[item times] (order :items), i (range times)]
-        (item bake-items) 
-        ) 
-      (delivery {:orderid (order :orderid)
-                 :address (order :address)
-                 :rackids all-bake-items}))))
+      (let [bake-items {:cake bake-cake, :cookies bake-cookies}, 
+            all-bake-items (for [[item times] (order :items), i (range times)] (item bake-items))]
+        (delivery {:orderid (order :orderid)
+                   :address (order :address)
+                   :rackids all-bake-items})))))
   
 
 (defn -main [] (println "hello")
-  (day-at-bakery2))
+  (day-at-bakery3))
