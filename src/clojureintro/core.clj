@@ -207,7 +207,7 @@
     (fetch-from-list all-ingredients)
     (doseq [order orders]
       (let [bake-items {:cake bake-cake, :cookies bake-cookies}, 
-            all-bake-items (for [[item times] (order :items), i (range times)] (item bake-items))]
+            all-bake-items (for [[item times] (order :items), i (range times)] ((item bake-items)))]
         (delivery {:orderid (order :orderid)
                    :address (order :address)
                    :rackids all-bake-items})))))
