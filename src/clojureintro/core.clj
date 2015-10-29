@@ -97,6 +97,32 @@
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
 (def brownie-ingredients {:flour 2, :egg 2, :butter 2, :sugar 1, :milk 1, :cocoa 2})
 
+(def baking {:recipies {:cake {:ingredients cake-ingredients,
+                               :steps [[:add :all
+                                        [:mix]
+                                        [:pour]
+                                        [:bake 25]
+                                        [:cool]]]}
+                        
+                        :cookies {:ingredients cookie-ingredients,
+                                  :steps [[:add :all]
+                                          [:mix]
+                                          [:pour]
+                                          [:bake 25]
+                                          [:cool]]}
+                        :brownies {:ingredients brownie-ingredients,
+                                   :steps [[:add :cocoa]
+                                           [:add :butter]
+                                           [:add :sugar]
+                                           [:mix]
+                                           [:add :flour]
+                                           [:add :egg]
+                                           [:add :milk]
+                                           [:mix]
+                                           [:pour]
+                                           [:bake 35]
+                                           [:cool]]}}})
+
 (defn bake-cake 
   "Assume cake-ingredients are already fetched"
   []
@@ -165,7 +191,6 @@
     (doseq [order orders]
       (let [bake-items {:cake bake-cake, :cookies bake-cookies, :brownies bake-brownies}, 
             all-bake-items (for [[item times] (order :items), i (range times)] ((item bake-items)) )]
-        (println "\n" "Delivering order!" "\n")
         (delivery {:orderid (order :orderid)
                    :address (order :address)
                    :rackids all-bake-items})))))
