@@ -11,7 +11,7 @@
   ([n ingredient] (do (when (and (not= n nil) (> n 0)) (dotimes [i n] (unload ingredient))) :ok))
   ([ingredient] (unload-multiple 1 ingredient)))
 
-(def scooped-ingredients #{:sugar :flour :milk})
+(def scooped-ingredients #{:sugar :flour :milk :cocoa})
 (def squeezed-ingredients #{:egg})
 (def simple-ingredients #{:butter})
 
@@ -53,7 +53,7 @@
     (if (empty? args) (println) 
       (do (print (first args) " ") (recur (rest args))))))
 
-(def pantry-ingredients #{:sugar :flour})
+(def pantry-ingredients #{:sugar :flour :cocoa})
 (def fridge-ingredients #{:milk :egg :butter})
 (def locations #{:pantry :fridge})
 (def all-ingredients (apply conj pantry-ingredients fridge-ingredients))
@@ -95,6 +95,7 @@
 
 (def cake-ingredients {:flour 2, :egg 2, :milk 1, :sugar 1})
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
+(def brownie-ingredients {:flour 2, :egg 2, :butter 2, :sugar 1, :milk 1, :cocoa 2})
 
 (defn bake-cake 
   "Assume cake-ingredients are already fetched"
@@ -121,9 +122,19 @@
   (cool-pan))
 
 (defn bake-brownies
-  "Place holder for now"
+  "Assume brownie-ingredients are already fetched"
   []
-  )
+  (add 2 :cocoa)
+  (add 2 :butter)
+  (add 1 :sugar)
+  (mix)
+  (add 2 :flour)
+  (add 2 :egg)
+  (add :milk)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 35)
+  (cool-pan))
 
 (defn merge-maps 
   "Merges two seperate maps"
@@ -143,31 +154,10 @@
   "Returns the total ingredients needed for all the orders"
   [orders]
   (let [ total-food (food-for-orders orders)
-         ingredients {:cake cake-ingredients, :cookies cookie-ingredients}]
+         ingredients {:cake cake-ingredients, :cookies cookie-ingredients, :brownies brownie-ingredients}]
     (reduce merge-maps (for [[k v] total-food] (multiply-ingredients v (k ingredients))))))
 
-(defn day-at-bakery 
-  "Fetching ingredients one per item, baking, and then delivering that item"
-  []
-  (doseq [order (get-morning-orders), [item [bake-item ingredients]] {:cake [ bake-cake cake-ingredients], :cookies [bake-cookies cookie-ingredients]}] 
-    (dotimes [n (item (order :items) 0)] 
-      (fetch-from-list ingredients)
-      (delivery {:orderid (order :orderid)
-                 :address (order :address)
-                 :rackids [(bake-item)]}))))
-
-(defn day-at-bakery2 
-  "Fetching all ingredients for all orders first.  Then baking each item and delivering that item"
-  []
-  (let [orders (get-morning-orders), all-ingredients (ingredients-for-orders orders)]
-    (fetch-from-list all-ingredients)
-    (doseq [order orders, [item bake-item] {:cake bake-cake, :cookies bake-cookies}]
-      (dotimes [n (item (order :items) 0)]
-        (delivery {:orderid (order :orderid)
-                   :address (order :address)
-                   :rackids [(bake-item)]})))))
-
-(defn day-at-bakery3
+(defn day-at-bakery
   "Fetching all ingredients for all orders first.  Then baking all items per order and delivering that order of items"
   []
   (let [orders (get-morning-orders),  all-ingredients (ingredients-for-orders orders)]
@@ -182,4 +172,4 @@
   
 
 (defn -main [] (println "hello")
-  (day-at-bakery3))
+  (day-at-bakery))
