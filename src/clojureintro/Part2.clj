@@ -11,6 +11,22 @@
   ([n ingredient] (do (when (and (not= n nil) (> n 0)) (dotimes [i n] (unload ingredient))) :ok))
   ([ingredient] (unload-multiple 1 ingredient)))
 
+(defn get-5-each-ingredients []
+  (start-over)
+  (go-to :fridge)
+  (loadup 5 :egg)
+  (loadup 5 :butter)
+  (loadup 5 :milk)
+  (go-to :pantry)
+  (loadup 5 :flour)
+  (loadup 5 :sugar)
+  (go-to :prep-area)
+  (unload-multiple 5 :egg)
+  (unload-multiple 5 :butter)
+  (unload-multiple 5 :flour)
+  (unload-multiple 5 :milk)
+  (unload-multiple 5 :sugar))
+
 (def scooped-ingredients #{:sugar :flour :milk})
 (def squeezed-ingredients #{:egg})
 (def simple-ingredients #{:butter})
@@ -45,6 +61,28 @@
 (defn add  
   ([ingredient] (add 1 ingredient))
   ([n ingredient] (do (dotimes [i n] (add-ingredient ingredient)) :ok)))
+
+(defn bake-cake-old []
+  (get-5-each-ingredients)
+  (add 2 :flour)
+  (add 2 :egg)
+  (add :milk)
+  (add :sugar)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 25)
+  (cool-pan))
+
+(defn bake-cookies-old []
+  (get-5-each-ingredients)
+  (add :egg)
+  (add :flour)
+  (add :sugar)
+  (add :butter)
+  (mix)
+  (pour-into-pan)
+  (bake-pan 30)
+  (cool-pan))
 
 ;------------Part 1 Code-----------
 ;----------------------------------
@@ -124,7 +162,6 @@
   "Place holder for now"
   []
   )
-
 (defn merge-maps 
   "Merges two seperate maps"
   [m1 m2] (merge-with + m1 m2))
@@ -174,8 +211,7 @@
     (fetch-from-list all-ingredients)
     (doseq [order orders]
       (let [bake-items {:cake bake-cake, :cookies bake-cookies, :brownies bake-brownies}, 
-            all-bake-items (for [[item times] (order :items), i (range times)] ((item bake-items)) )]
-        (println "\n" "Delivering order!" "\n")
+            all-bake-items (for [[item times] (order :items), i (range times)] ((item bake-items)))]
         (delivery {:orderid (order :orderid)
                    :address (order :address)
                    :rackids all-bake-items})))))
