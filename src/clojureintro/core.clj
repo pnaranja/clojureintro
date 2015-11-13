@@ -123,6 +123,14 @@
                                            [:bake 35]
                                            [:cool]]}}})
 
+(defn perform [step]
+  (cond
+    (= :cool (first step)) (cool-pan)
+    (= :mix (first step)) (mix)
+    (= :pour (first step)) (pour-into-pan)
+    (= :bake (first step)) (bake-pan (second step))
+    ))
+
 (defn bake-cake 
   "Assume cake-ingredients are already fetched"
   []
