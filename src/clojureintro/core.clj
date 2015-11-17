@@ -98,12 +98,12 @@
 (def brownie-ingredients {:flour 2, :egg 2, :butter 2, :sugar 1, :milk 1, :cocoa 2})
 
 (def baking {:recipies {:cake {:ingredients cake-ingredients,
-                               :steps [[:add :all
-                                        [:mix]
-                                        [:pour]
-                                        [:bake 25]
-                                        [:cool]]]}
-                        
+                               :steps [[:add :all]
+                                       [:mix]
+                                       [:pour]
+                                       [:bake 25]
+                                       [:cool]]}
+
                         :cookies {:ingredients cookie-ingredients,
                                   :steps [[:add :all]
                                           [:mix]
@@ -123,12 +123,17 @@
                                            [:bake 35]
                                            [:cool]]}}})
 
-(defn perform [step]
+(defn perform [recipe step]
   (cond
     (= :cool (first step)) (cool-pan)
     (= :mix (first step)) (mix)
     (= :pour (first step)) (pour-into-pan)
     (= :bake (first step)) (bake-pan (second step))
+    (= :add (first step)) 
+      (cond 
+        (= '(:all) (rest step)) (doseq [[ingredient amount] (:ingredients recipe)] (add ingredient amount))
+        (= (count step) 3) (apply add (rest step)))
+      (contains? (:ingredients recipe) (second step)) (add ((:ingredients recipe) (second step)) (second step))
     ))
 
 (defn bake-cake 
