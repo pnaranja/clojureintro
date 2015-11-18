@@ -97,7 +97,7 @@
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
 (def brownie-ingredients {:flour 2, :egg 2, :butter 2, :sugar 1, :milk 1, :cocoa 2})
 
-(def baking {:recipies {:cake {:ingredients cake-ingredients,
+(def baking {:recipes {:cake {:ingredients cake-ingredients,
                                :steps [[:add :all]
                                        [:mix]
                                        [:pour]
@@ -123,18 +123,30 @@
                                            [:bake 35]
                                            [:cool]]}}})
 
-(defn perform [recipe step]
+(defn perform 
+  "Perform a step in the recipe"
+  [recipe step]
   (cond
     (= :cool (first step)) (cool-pan)
     (= :mix (first step)) (mix)
     (= :pour (first step)) (pour-into-pan)
     (= :bake (first step)) (bake-pan (second step))
     (= :add (first step)) 
-      (cond 
-        (= '(:all) (rest step)) (doseq [[ingredient amount] (:ingredients recipe)] (add ingredient amount))
-        (= (count step) 3) (apply add (rest step)))
+    (cond 
+      (= '(:all) (rest step)) (doseq [[ingredient amount] (:ingredients recipe)] (add amount ingredient))
+      (= (count step) 3) (apply add (rest step))
       (contains? (:ingredients recipe) (second step)) (add ((:ingredients recipe) (second step)) (second step))
-    ))
+      :else
+        (error "This recipe doesn't call for the ingredient: " (second step)))
+
+    :else
+    (error "Unrecognized step")))
+
+(defn bake-recipe 
+  "Fetch all ingredients of the recipe and perform the baking steps"
+  [recipe]
+  (fetch-from-list (:ingredients recipe))
+  (doseq [step (:steps recipe)] (perform recipe step)))
 
 (defn bake-cake 
   "Assume cake-ingredients are already fetched"
