@@ -97,31 +97,16 @@
 (def cookie-ingredients {:flour 1, :egg 1, :butter 1 , :sugar 1})
 (def brownie-ingredients {:flour 2, :egg 2, :butter 2, :sugar 1, :milk 1, :cocoa 2})
 
-(def baking {:recipes {:cake {:ingredients cake-ingredients,
-                               :steps [[:add :all]
-                                       [:mix]
-                                       [:pour]
-                                       [:bake 25]
-                                       [:cool]]}
+(def cake-steps [[:add :all] [:mix] [:pour] [:bake 25] [:cool]])
+(def cookie-steps [[:add :all] [:mix] [:pour] [:bake 30] [:cool]])
+(def brownie-steps [[:add :cocoa] [:add :butter] [:add :sugar] [:mix] [:add :flour] [:add :egg] [:add :milk] [:mix] [:pour] [:bake 35] [:cool]])
 
+(def baking {:recipes {:cake {:ingredients cake-ingredients,
+                               :steps cake-steps}
                         :cookies {:ingredients cookie-ingredients,
-                                  :steps [[:add :all]
-                                          [:mix]
-                                          [:pour]
-                                          [:bake 30]
-                                          [:cool]]}
+                                  :steps cookie-steps}
                         :brownies {:ingredients brownie-ingredients,
-                                   :steps [[:add :cocoa]
-                                           [:add :butter]
-                                           [:add :sugar]
-                                           [:mix]
-                                           [:add :flour]
-                                           [:add :egg]
-                                           [:add :milk]
-                                           [:mix]
-                                           [:pour]
-                                           [:bake 35]
-                                           [:cool]]}}})
+                                   :steps brownie-steps}}})
 
 (defn perform 
   "Perform a step in the recipe"
@@ -156,45 +141,6 @@
     (= item :cookies) (-> baking (:recipes) (:cookies) (bake-recipe))
     (= item :brownies) (-> baking (:recipes) (:brownies) (bake-recipe))
     :else (error "I don't know how to bake that!")))
-
-(defn bake-cake 
-  "Assume cake-ingredients are already fetched"
-  []
-  (add 2 :flour)
-  (add 2 :egg)
-  (add :milk)
-  (add :sugar)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 25)
-  (cool-pan))
-
-(defn bake-cookies 
-  "Assume cookies-ingredients are already fetched"
-  []
-  (add :egg)
-  (add :flour)
-  (add :sugar)
-  (add :butter)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 30)
-  (cool-pan))
-
-(defn bake-brownies
-  "Assume brownie-ingredients are already fetched"
-  []
-  (add 2 :cocoa)
-  (add 2 :butter)
-  (add 1 :sugar)
-  (mix)
-  (add 2 :flour)
-  (add 2 :egg)
-  (add :milk)
-  (mix)
-  (pour-into-pan)
-  (bake-pan 35)
-  (cool-pan))
 
 (defn merge-maps 
   "Merges two seperate maps"
