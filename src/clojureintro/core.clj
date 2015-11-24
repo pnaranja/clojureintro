@@ -108,7 +108,7 @@
                                   :steps [[:add :all]
                                           [:mix]
                                           [:pour]
-                                          [:bake 25]
+                                          [:bake 30]
                                           [:cool]]}
                         :brownies {:ingredients brownie-ingredients,
                                    :steps [[:add :cocoa]
@@ -146,7 +146,16 @@
   "Fetch all ingredients of the recipe and perform the baking steps"
   [recipe]
   (fetch-from-list (:ingredients recipe))
-  (doseq [step (:steps recipe)] (perform recipe step)))
+  (last (for [step (:steps recipe)] (perform recipe step))))
+
+(defn bake
+  "Bake an item"
+  [item]
+  (cond
+    (= item "cake") (-> baking (:recipes) (:cake) (bake-recipe))
+    (= item "cookies") (-> baking (:recipes) (:cookies) (bake-recipe))
+    (= item "brownies") (-> baking (:recipes) (:brownies) (bake-recipe))
+    :else (error "I don't know how to bake that!")))
 
 (defn bake-cake 
   "Assume cake-ingredients are already fetched"
