@@ -152,9 +152,9 @@
   "Bake an item"
   [item]
   (cond
-    (= item "cake") (-> baking (:recipes) (:cake) (bake-recipe))
-    (= item "cookies") (-> baking (:recipes) (:cookies) (bake-recipe))
-    (= item "brownies") (-> baking (:recipes) (:brownies) (bake-recipe))
+    (= item :cake) (-> baking (:recipes) (:cake) (bake-recipe))
+    (= item :cookies) (-> baking (:recipes) (:cookies) (bake-recipe))
+    (= item :brownies) (-> baking (:recipes) (:brownies) (bake-recipe))
     :else (error "I don't know how to bake that!")))
 
 (defn bake-cake 
