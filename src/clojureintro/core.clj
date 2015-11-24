@@ -128,7 +128,7 @@
     (error "Unrecognized step")))
 
 (defn bake-recipe 
-  "Fetch all ingredients of the recipe and perform the baking steps"
+  "Assume all ingredients needed are fetched and perform the baking steps"
   [recipe]
   (fetch-from-list (:ingredients recipe))
   (last (for [step (:steps recipe)] (perform recipe step))))
@@ -164,13 +164,12 @@
     (reduce merge-maps (for [[k v] total-food] (multiply-ingredients v (k ingredients))))))
 
 (defn day-at-bakery
-  "Fetching all ingredients for all orders first.  Then baking all items per order and delivering that order of items"
+  "Fetching all ingredients for all orders first.  Then bake all items per order and deliver that order of items"
   []
   (let [orders (get-morning-orders),  all-ingredients (ingredients-for-orders orders)]
     (fetch-from-list all-ingredients)
     (doseq [order orders]
-      (let [bake-items {:cake bake-cake, :cookies bake-cookies, :brownies bake-brownies}, 
-            all-bake-items (for [[item times] (order :items), i (range times)] ((item bake-items)) )]
+      (let [all-bake-items (for [[item times] (order :items), i (range times)] (bake item))]
         (delivery {:orderid (order :orderid)
                    :address (order :address)
                    :rackids all-bake-items})))))
