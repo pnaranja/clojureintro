@@ -15,9 +15,14 @@
 (def squeezed-ingredients #{:egg})
 (def simple-ingredients #{:butter})
 
-(defn scooped? [ingredient] (contains? scooped-ingredients ingredient))  
-(defn squeezed? [ingredient] (contains? squeezed-ingredients ingredient))  
-(defn simple? [ingredient] (contains? simple-ingredients ingredient))  
+(defn scooped?-old [ingredient] (contains? scooped-ingredients ingredient))  
+(defn scooped? [ingredient] (= :scooped (-> baking (:ingredients) (ingredient) (:usage))))
+
+(defn squeezed?-old [ingredient] (contains? squeezed-ingredients ingredient))  
+(defn squeezed? [ingredient] (= :squeezed (-> baking (:ingredients) (ingredient) (:usage))))  
+
+(defn simple?-old [ingredient] (contains? simple-ingredients ingredient))  
+(defn simple? [ingredient] (= :simple (-> baking (:ingredients) (ingredient) (:usage))))  
 
 (defn cannot-action [ingredient action] (println "Sorry, cannot" action ingredient))
 
@@ -106,7 +111,19 @@
                         :cookies {:ingredients cookie-ingredients,
                                   :steps cookie-steps}
                         :brownies {:ingredients brownie-ingredients,
-                                   :steps brownie-steps}}})
+                                   :steps brownie-steps}},
+             :ingredients {:egg {:storage :fridge
+                                 :usage :squeezed}
+                           :milk {:storage :fridge
+                                  :usage :scooped}
+                           :flour {:storage :pantry
+                                   :usage :scooped}
+                           :butter {:storage :fridge
+                                    :usage :simple}
+                           :sugar {:storage :pantry
+                                   :usage :scooped}
+                           :cocoa {:storage :pantry
+                                   :usage :scoooped}}})
 
 (defn perform 
   "Perform a step in the recipe"
