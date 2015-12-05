@@ -63,29 +63,12 @@
 (def locations #{:pantry :fridge})
 (def all-ingredients (apply conj pantry-ingredients fridge-ingredients))
 
-(defn from-pantry? [ingredient]
-  (contains?  pantry-ingredients ingredient))
-
-(defn from-fridge? [ingredient]
-  (contains?  fridge-ingredients ingredient))
-
 (defn fetch ([ingredient] (fetch 1 ingredient))
   ([amount ingredient] 
-   (cond 
-     (from-pantry? ingredient) 
-     (do 
-       (go-to :pantry) 
-       (loadup amount ingredient)
-       (go-to :prep-area)
-       (unload-multiple amount ingredient))
-     (from-fridge? ingredient) 
-     (do
-       (go-to :fridge)
-       (loadup amount ingredient)
-       (go-to :prep-area)
-       (unload-multiple amount ingredient))
-     :else
-     (error "Ingredient not in the pantry or fridge"))))
+   (go-to (-> baking (:ingredients) (ingredient) (:storage)))
+   (loadup amount ingredient)
+   (go-to :prep-area)
+   (unload-multiple amount ingredient)))
 
 (defn fetch-from-list 
   "Fetch ingredients from a shopping-list.  The shopping-list should be a map.
