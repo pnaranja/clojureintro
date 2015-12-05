@@ -123,7 +123,7 @@
                            :sugar {:storage :pantry
                                    :usage :scooped}
                            :cocoa {:storage :pantry
-                                   :usage :scoooped}}})
+                                   :usage :scooped}}})
 
 (defn perform 
   "Perform a step in the recipe"
