@@ -11,18 +11,11 @@
   ([n ingredient] (do (when (and (not= n nil) (> n 0)) (dotimes [i n] (unload ingredient))) :ok))
   ([ingredient] (unload-multiple 1 ingredient)))
 
-(def scooped-ingredients #{:sugar :flour :milk :cocoa})
-(def squeezed-ingredients #{:egg})
-(def simple-ingredients #{:butter})
-
-(defn scooped?-old [ingredient] (contains? scooped-ingredients ingredient))  
-(defn scooped? [ingredient] (= :scooped (-> baking (:ingredients) (ingredient) (:usage))))
-
-(defn squeezed?-old [ingredient] (contains? squeezed-ingredients ingredient))  
-(defn squeezed? [ingredient] (= :squeezed (-> baking (:ingredients) (ingredient) (:usage))))  
-
-(defn simple?-old [ingredient] (contains? simple-ingredients ingredient))  
-(defn simple? [ingredient] (= :simple (-> baking (:ingredients) (ingredient) (:usage))))  
+(declare baking)
+(defn check_usage [its_use ingredient] (= its_use (-> baking (:ingredients) (ingredient) (:usage))))
+(defn scooped? [ingredient] (check_usage :scooped ingredient))
+(defn squeezed? [ingredient] (check_usage :squeezed ingredient))
+(defn simple? [ingredient] (check_usage :simple ingredient))
 
 (defn cannot-action [ingredient action] (println "Sorry, cannot" action ingredient))
 
@@ -51,8 +44,6 @@
   ([ingredient] (add 1 ingredient))
   ([n ingredient] (do (dotimes [i n] (add-ingredient ingredient)) :ok)))
 
-;------------Part 1 Code-----------
-;----------------------------------
 (defn myprintln [& args] 
   (loop [args args] 
     (if (empty? args) (println) 
